@@ -1,5 +1,5 @@
 <html>
 <body>
-<h2>Welcome Rajani</h2>
+<h2 style='color:blue'>Welcome Rajani</h2>
 </body>
 </html>
