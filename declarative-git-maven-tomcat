@@ -31,14 +31,4 @@ pipeline{
             }
         }
     }
-      post{
-          success{
-              mail bcc: '', body: '''Hi Team,
-
-The app was successfully deployed.
-
-Regards,
-Rajani''', cc: '', subject: 'Successfully deployed', to: 'prajani2211@gmail.com'
-          }
-      }
 }
