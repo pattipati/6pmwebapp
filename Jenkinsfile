@@ -1,44 +1,14 @@
 pipeline{
     agent any
-    environment{
-        PATH = "${PATH}:${tool name: 'maven3', type: 'maven'}/bin"
-    }
-    stages{
-        stage('SCM Checkout'){
-            steps{
-                git url: '',
-                branch: 'master',
-                credentialsId: 'github'
-            }
-        }
-
-        stage('Maven Build'){
-            steps{
-                sh 'mvn clean package'
-            }
-        }
-
-        stage('Deploy Dev'){
-            steps{
-                sshagent(['tomcat-dev']){
-                    //stop tomcat
-                    sh "ssh -o StrictHostKeyChecking=no ec2-user@172.31.35.248 /opt/tomcat8/bin/shutdown.sh"
-                   // copy war file to remote tomcat
-                    sh "scp target/6pmwebapp.war ec2-user@172.31.35.248:/opt/tomcat8/webapps/"
-                    //start tomcat
-                    sh "ssh ec2-user@172.31.35.248 /opt/tomcat8/bin/startup.sh"
-                }
-            }
+    parameters {
+  string defaultValue: 'master', description: 'Choose the branch to build and deploy', name: 'branchName', trim: false
+}
+stages{
+    stage('SCM Checkout'){
+        steps{
+        git branch: "${params['branchName']}",
+        url:'https://github.com/pattipati/6pmwebapp'
         }
     }
-      post{
-          success{
-              mail bcc: '', body: '''Hi Team,
-
-The app was successfully deployed.
-
-Regards,
-Rajani''', cc: '', subject: 'Successfully deployed', to: 'prajani2211@gmail.com'
-          }
-      }
+}
 }
