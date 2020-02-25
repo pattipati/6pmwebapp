@@ -1,0 +1,10 @@
+---
+ - hosts: all 
+   become: yes
+   tasks:
+     - name: Install git
+       yum:
+         name: git
+         state: present
+       when: ansible_hostname == "ip-172-31-46-213" 
+
